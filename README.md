@@ -59,3 +59,9 @@ coreos:
             EnvironmentFile=/etc/etcd_aws_configs.env
 
 ```
+
+## Other similar tool
+[crewjam/etcd-aws](https://github.com/crewjam/etcd-aws/) actually used this as reference implementation, but it did too much and I didn't want to wrap the etcd process.
+
+[MonsantoCo/etcd-aws-cluster](https://github.com/MonsantoCo/etcd-aws-cluster) bash implementation which uses `awscli` but in CoreOS you cannot install it easily.
+Also in my case, cannot run inside Docker container because at boot I don't have Docker yet running.
