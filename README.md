@@ -6,7 +6,7 @@ coding ip addresses or using the etcd discovery service.
 
 ## Command Line usage
 ```shell
-./etcd-aws-configurer --target-file /etc/etcd_aws_configs.env
+./etcd-aws-configurer -target /etc/etcd_aws_configs.env
 ```
 
 Creates file to `/etc/etcd_aws_configs.env` with content like:
@@ -42,7 +42,7 @@ coreos:
         [Service]
         ExecStartPre=/usr/bin/curl -s -L -o /opt/bin/etcd-aws-configurer https://github.com/ernoaapa/etcd-aws-configurer/releases/download/v0.1.0/etcd-aws-configurer-Linux-x86_64
         ExecStartPre=/usr/bin/chmod +x /opt/bin/etcd-aws-configurer
-        ExecStart=/opt/bin/etcd-aws-configurer
+        ExecStart=/opt/bin/etcd-aws-configurer -target /etc/etcd_aws_configs.env
         RemainAfterExit=yes
         Type=oneshot
 
