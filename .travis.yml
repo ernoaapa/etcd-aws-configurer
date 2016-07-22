@@ -1,0 +1,18 @@
+language: go
+
+go:
+  - 1.6
+script:
+  - mkdir build
+  - go build -o build/etcd-aws-configurer-Linux-x86_64 *.go
+deploy:
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: "FILE TO UPLOAD"
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email:
+    on_failure: always
