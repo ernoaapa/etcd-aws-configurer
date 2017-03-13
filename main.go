@@ -27,8 +27,14 @@ func main() {
 		for _, member := range members {
 			log.Infof("%s: %s", member.Name, member.PeerURLs[0])
 		}
-		cleanupOldMembers(instances, leader, members)
-		ensureIsMember(instances, localInstance, leader, members)
+
+		if err := cleanupOldMembers(instances, leader, members); err != nil {
+			log.Fatalf("Failed to cleanup old members from etcd: %s", err)
+		}
+
+		if err := ensureIsMember(instances, localInstance, leader, members); err != nil {
+			log.Fatalf("Failed register instance to etcd: %s", err)
+		}
 	} else {
 		log.Infoln("New etcd cluster")
 	}
@@ -39,13 +45,13 @@ func main() {
 	}
 }
 
-func ensureIsMember(instances []*ec2.Instance, localInstance *ec2.Instance, leader *etcdMember, members []*etcdMember) {
+func ensureIsMember(instances []*ec2.Instance, localInstance *ec2.Instance, leader *etcdMember, members []*etcdMember) error {
 	log.Infoln("Will join to existing etcd cluster")
 
 	for _, existingMember := range members {
 		if existingMember.Name == *localInstance.InstanceId {
 			log.Infoln("Already part of the etcd cluster, skip registering")
-			return
+			return nil
 		}
 	}
 
@@ -53,5 +59,5 @@ func ensureIsMember(instances []*ec2.Instance, localInstance *ec2.Instance, lead
 		Name:     *localInstance.InstanceId,
 		PeerURLs: []string{fmt.Sprintf("http://%s:2380", *localInstance.PrivateIpAddress)},
 	}
-	joinEtcdMember(leader, localMember)
+	return joinEtcdMember(leader, localMember)
 }
